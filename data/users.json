@@ -1,0 +1,42 @@
+[
+  {
+    "_id": "e5f601234567890123456701",
+    "email": "national@slsea.gov.lk",
+    "passwordHash": "$2b$10$abcdefghijklmnopqrstuv0123456789012345678901234567",
+    "role": "national",
+    "jurisdictionType": "national",
+    "jurisdictionId": null
+  },
+  {
+    "_id": "e5f601234567890123456702",
+    "email": "western@slsea.gov.lk",
+    "passwordHash": "$2b$10$abcdefghijklmnopqrstuv0123456789012345678901234567",
+    "role": "province",
+    "jurisdictionType": "province",
+    "jurisdictionId": "a1b2c3d4e5f6012345678901"
+  },
+  {
+    "_id": "e5f601234567890123456703",
+    "email": "central@slsea.gov.lk",
+    "passwordHash": "$2b$10$abcdefghijklmnopqrstuv0123456789012345678901234567",
+    "role": "province",
+    "jurisdictionType": "province",
+    "jurisdictionId": "a1b2c3d4e5f6012345678902"
+  },
+  {
+    "_id": "e5f601234567890123456704",
+    "email": "colombo@slsea.gov.lk",
+    "passwordHash": "$2b$10$abcdefghijklmnopqrstuv0123456789012345678901234567",
+    "role": "district",
+    "jurisdictionType": "district",
+    "jurisdictionId": "b2c3d4e5f60123456789001"
+  },
+  {
+    "_id": "e5f601234567890123456705",
+    "email": "kandy@slsea.gov.lk",
+    "passwordHash": "$2b$10$abcdefghijklmnopqrstuv0123456789012345678901234567",
+    "role": "district",
+    "jurisdictionType": "district",
+    "jurisdictionId": "b2c3d4e5f60123456789004"
+  }
+]

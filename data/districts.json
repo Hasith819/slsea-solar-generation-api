@@ -1,0 +1,127 @@
+[
+  {
+    "_id": "b2c3d4e5f60123456789001",
+    "provinceId": "a1b2c3d4e5f6012345678901",
+    "name": "Colombo"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789002",
+    "provinceId": "a1b2c3d4e5f6012345678901",
+    "name": "Gampaha"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789003",
+    "provinceId": "a1b2c3d4e5f6012345678901",
+    "name": "Kalutara"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789004",
+    "provinceId": "a1b2c3d4e5f6012345678902",
+    "name": "Kandy"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789005",
+    "provinceId": "a1b2c3d4e5f6012345678902",
+    "name": "Matale"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789006",
+    "provinceId": "a1b2c3d4e5f6012345678902",
+    "name": "Nuwara Eliya"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789007",
+    "provinceId": "a1b2c3d4e5f6012345678903",
+    "name": "Galle"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789008",
+    "provinceId": "a1b2c3d4e5f6012345678903",
+    "name": "Matara"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789009",
+    "provinceId": "a1b2c3d4e5f6012345678903",
+    "name": "Hambantota"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789010",
+    "provinceId": "a1b2c3d4e5f6012345678904",
+    "name": "Jaffna"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789011",
+    "provinceId": "a1b2c3d4e5f6012345678904",
+    "name": "Kilinochchi"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789012",
+    "provinceId": "a1b2c3d4e5f6012345678904",
+    "name": "Mannar"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789013",
+    "provinceId": "a1b2c3d4e5f6012345678904",
+    "name": "Vavuniya"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789014",
+    "provinceId": "a1b2c3d4e5f6012345678904",
+    "name": "Mullaitivu"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789015",
+    "provinceId": "a1b2c3d4e5f6012345678905",
+    "name": "Batticaloa"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789016",
+    "provinceId": "a1b2c3d4e5f6012345678905",
+    "name": "Ampara"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789017",
+    "provinceId": "a1b2c3d4e5f6012345678905",
+    "name": "Trincomalee"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789018",
+    "provinceId": "a1b2c3d4e5f6012345678906",
+    "name": "Kurunegala"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789019",
+    "provinceId": "a1b2c3d4e5f6012345678906",
+    "name": "Puttalam"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789020",
+    "provinceId": "a1b2c3d4e5f6012345678907",
+    "name": "Anuradhapura"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789021",
+    "provinceId": "a1b2c3d4e5f6012345678907",
+    "name": "Polonnaruwa"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789022",
+    "provinceId": "a1b2c3d4e5f6012345678908",
+    "name": "Badulla"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789023",
+    "provinceId": "a1b2c3d4e5f6012345678908",
+    "name": "Monaragala"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789024",
+    "provinceId": "a1b2c3d4e5f6012345678909",
+    "name": "Ratnapura"
+  },
+  {
+    "_id": "b2c3d4e5f60123456789025",
+    "provinceId": "a1b2c3d4e5f6012345678909",
+    "name": "Kegalle"
+  }
+]

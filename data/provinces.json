@@ -1,0 +1,38 @@
+[
+  {
+    "_id": "a1b2c3d4e5f6012345678901",
+    "name": "Western"
+  },
+  {
+    "_id": "a1b2c3d4e5f6012345678902",
+    "name": "Central"
+  },
+  {
+    "_id": "a1b2c3d4e5f6012345678903",
+    "name": "Southern"
+  },
+  {
+    "_id": "a1b2c3d4e5f6012345678904",
+    "name": "Northern"
+  },
+  {
+    "_id": "a1b2c3d4e5f6012345678905",
+    "name": "Eastern"
+  },
+  {
+    "_id": "a1b2c3d4e5f6012345678906",
+    "name": "North Western"
+  },
+  {
+    "_id": "a1b2c3d4e5f6012345678907",
+    "name": "North Central"
+  },
+  {
+    "_id": "a1b2c3d4e5f6012345678908",
+    "name": "Uva"
+  },
+  {
+    "_id": "a1b2c3d4e5f6012345678909",
+    "name": "Sabaragamuwa"
+  }
+]

@@ -1,0 +1,142 @@
+[
+  {
+    "_id": "c3d4e5f6012345678901201",
+    "districtId": "b2c3d4e5f60123456789001",
+    "name": "Kolonnawa Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901202",
+    "districtId": "b2c3d4e5f60123456789002",
+    "name": "Peliyagoda Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901203",
+    "districtId": "b2c3d4e5f60123456789003",
+    "name": "Panadura Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901204",
+    "districtId": "b2c3d4e5f60123456789004",
+    "name": "Kandy South Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901205",
+    "districtId": "b2c3d4e5f60123456789005",
+    "name": "Matale Town Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901206",
+    "districtId": "b2c3d4e5f60123456789006",
+    "name": "Nuwara Eliya Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901207",
+    "districtId": "b2c3d4e5f60123456789007",
+    "name": "Galle Fort Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901208",
+    "districtId": "b2c3d4e5f60123456789008",
+    "name": "Matara Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901209",
+    "districtId": "b2c3d4e5f60123456789009",
+    "name": "Hambantota Port Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901210",
+    "districtId": "b2c3d4e5f60123456789010",
+    "name": "Jaffna East Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901211",
+    "districtId": "b2c3d4e5f60123456789011",
+    "name": "Kilinochchi Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901212",
+    "districtId": "b2c3d4e5f60123456789012",
+    "name": "Mannar Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901213",
+    "districtId": "b2c3d4e5f60123456789013",
+    "name": "Vavuniya North Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901214",
+    "districtId": "b2c3d4e5f60123456789015",
+    "name": "Batticaloa Main Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901215",
+    "districtId": "b2c3d4e5f60123456789016",
+    "name": "Ampara Town Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901216",
+    "districtId": "b2c3d4e5f60123456789017",
+    "name": "Trincomalee Harbour Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901217",
+    "districtId": "b2c3d4e5f60123456789018",
+    "name": "Kurunegala South Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901218",
+    "districtId": "b2c3d4e5f60123456789019",
+    "name": "Puttalam Coastal Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901219",
+    "districtId": "b2c3d4e5f60123456789020",
+    "name": "Anuradhapura North Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901220",
+    "districtId": "b2c3d4e5f60123456789021",
+    "name": "Polonnaruwa Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901221",
+    "districtId": "b2c3d4e5f60123456789022",
+    "name": "Badulla Town Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901222",
+    "districtId": "b2c3d4e5f60123456789023",
+    "name": "Monaragala Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901223",
+    "districtId": "b2c3d4e5f60123456789024",
+    "name": "Ratnapura Urban Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901224",
+    "districtId": "b2c3d4e5f60123456789025",
+    "name": "Kegalle Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901225",
+    "districtId": "b2c3d4e5f60123456789020",
+    "name": "Mihintale Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901226",
+    "districtId": "b2c3d4e5f60123456789002",
+    "name": "Veyangoda Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901227",
+    "districtId": "b2c3d4e5f60123456789024",
+    "name": "Embilipitiya Grid Substation"
+  },
+  {
+    "_id": "c3d4e5f6012345678901228",
+    "districtId": "b2c3d4e5f60123456789008",
+    "name": "Weligama Grid Substation"
+  }
+]

@@ -34,18 +34,73 @@ async function getGenerationReadingById(req, res, next) {
 
 async function getReadingsByInstallation(req, res, next) {
     try {
-        const page = Math.max(
-            Number.parseInt(req.query.page, 10) || 1,
-            1
-        );
 
-        const limit = Math.min(
-            Math.max(
-                Number.parseInt(req.query.limit, 10) || 20,
-                1
-            ),
-            100
-        );
+        if (
+            req.query.sort &&
+            !['asc', 'desc'].includes(req.query.sort)
+        ) {
+            return res.status(400).json({
+                code: 'INVALID_SORT',
+                message: 'Invalid sort parameter',
+                detail: "The 'sort' parameter must be either 'asc' or 'desc'."
+            });
+        }
+
+        const fromDate = req.query.from
+            ? new Date(req.query.from)
+            : null;
+
+        const toDate = req.query.to
+            ? new Date(req.query.to)
+            : null;
+
+        if (req.query.from && Number.isNaN(fromDate.getTime())) {
+            return res.status(400).json({
+                code: 'INVALID_FROM_DATE',
+                message: 'Invalid from date',
+                detail: "The 'from' parameter must be a valid ISO 8601 date and time."
+            });
+        }
+
+        if (req.query.to && Number.isNaN(toDate.getTime())) {
+            return res.status(400).json({
+                code: 'INVALID_TO_DATE',
+                message: 'Invalid to date',
+                detail: "The 'to' parameter must be a valid ISO 8601 date and time."
+            });
+        }
+
+        if (fromDate && toDate && fromDate > toDate) {
+            return res.status(400).json({
+                code: 'INVALID_DATE_RANGE',
+                message: 'Invalid date range',
+                detail: "The 'from' date must be earlier than or equal to the 'to' date."
+            });
+        }
+
+        const page = req.query.page
+            ? Number(req.query.page)
+            : 1;
+
+        const limit = req.query.limit
+            ? Number(req.query.limit)
+            : 20;
+
+        if (!Number.isInteger(page) || page < 1) {
+            return res.status(400).json({
+                code: 'INVALID_PAGE',
+                message: 'Invalid page parameter',
+                detail: "The 'page' parameter must be a positive integer."
+            });
+        }
+
+        if (!Number.isInteger(limit) || limit < 1 || limit > 100) {
+            return res.status(400).json({
+                code: 'INVALID_LIMIT',
+                message: 'Invalid limit parameter',
+                detail: "The 'limit' parameter must be an integer between 1 and 100."
+            });
+        }
 
         const skip = (page - 1) * limit;
 
@@ -53,15 +108,15 @@ async function getReadingsByInstallation(req, res, next) {
             installationId: req.params.installationId
         };
 
-        if (req.query.from || req.query.to) {
+        if (fromDate || toDate) {
             filter.timestamp = {};
 
-            if (req.query.from) {
-                filter.timestamp.$gte = new Date(req.query.from);
+            if (fromDate) {
+                filter.timestamp.$gte = fromDate;
             }
 
-            if (req.query.to) {
-                filter.timestamp.$lte = new Date(req.query.to);
+            if (toDate) {
+                filter.timestamp.$lte = toDate;
             }
         }
 

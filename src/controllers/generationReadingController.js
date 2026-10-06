@@ -34,13 +34,73 @@ async function getGenerationReadingById(req, res, next) {
 
 async function getReadingsByInstallation(req, res, next) {
     try {
-        const readings = await GenerationReading
-            .find({
-                installationId: req.params.installationId
-            })
-            .sort({ timestamp: -1 });
+        const page = Math.max(
+            Number.parseInt(req.query.page, 10) || 1,
+            1
+        );
 
-        res.status(200).json(readings);
+        const limit = Math.min(
+            Math.max(
+                Number.parseInt(req.query.limit, 10) || 20,
+                1
+            ),
+            100
+        );
+
+        const skip = (page - 1) * limit;
+
+        const filter = {
+            installationId: req.params.installationId
+        };
+
+        if (req.query.from || req.query.to) {
+            filter.timestamp = {};
+
+            if (req.query.from) {
+                filter.timestamp.$gte = new Date(req.query.from);
+            }
+
+            if (req.query.to) {
+                filter.timestamp.$lte = new Date(req.query.to);
+            }
+        }
+
+        const [readings, total] = await Promise.all([
+            GenerationReading
+                .find(filter)
+                .sort({
+                    timestamp: req.query.sort === 'asc' ? 1 : -1
+                })
+                .skip(skip)
+                .limit(limit),
+
+            GenerationReading.countDocuments(filter)
+        ]);
+
+        const totalPages = Math.ceil(total / limit);
+
+        const baseUrl = `${req.protocol}://${req.get('host')}${req.baseUrl}${req.path}`;
+
+        const pagination = {
+            page,
+            limit,
+            total,
+            totalPages
+        };
+
+        if (page > 1) {
+            pagination.previous = `${baseUrl}?page=${page - 1}&limit=${limit}`;
+        }
+
+        if (page < totalPages) {
+            pagination.next = `${baseUrl}?page=${page + 1}&limit=${limit}`;
+        }
+
+        res.status(200).json({
+            data: readings,
+            pagination
+        });
+
     } catch (error) {
         next(error);
     }

@@ -1,7 +1,16 @@
 const app = require('./app');
+const { port } = require('./config/env');
+const { connectDatabase } = require('./config/database');
 
-const PORT = process.env.PORT || 3000;
+async function start() {
+    await connectDatabase();
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    app.listen(port, () => {
+        console.log(`Server running on port ${port}`);
+    });
+}
+
+start().catch((error) => {
+    console.error('Failed to start server:', error.message);
+    process.exit(1);
 });

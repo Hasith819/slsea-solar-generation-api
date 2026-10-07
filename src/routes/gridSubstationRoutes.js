@@ -9,10 +9,23 @@ const {
     getInstallationsBySubstation
 } = require('../controllers/solarInstallationController');
 
+const {
+    authenticate
+} = require('../middleware/authMiddleware');
+
+const {
+    authorizeSubstation
+} = require('../middleware/jurisdictionMiddleware');
+
 const router = express.Router();
 
 router.get('/', getGridSubstations);
 router.get('/:substationId/installations', getInstallationsBySubstation);
-router.get('/:substationId', getGridSubstationById);
+router.get(
+    '/:substationId',
+    authenticate,
+    authorizeSubstation,
+    getGridSubstationById
+);
 
 module.exports = router;

@@ -6,10 +6,28 @@ const {
     getGridSubstationsByDistrict
 } = require('../controllers/districtController');
 
+const {
+    authenticate
+} = require('../middleware/authMiddleware');
+
+const {
+    authorizeDistrict
+} = require('../middleware/jurisdictionMiddleware');
+
 const router = express.Router();
 
 router.get('/', getDistricts);
-router.get('/:districtId', getDistrictById);
-router.get('/:districtId/grid-substations', getGridSubstationsByDistrict);
+
+router.get(
+    '/:districtId',
+    authenticate,
+    authorizeDistrict,
+    getDistrictById
+);
+
+router.get(
+    '/:districtId/grid-substations',
+    getGridSubstationsByDistrict
+);
 
 module.exports = router;

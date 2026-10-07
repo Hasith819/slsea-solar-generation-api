@@ -1,4 +1,5 @@
 const GenerationReading = require('../models/GenerationReading');
+const SolarInstallation = require('../models/SolarInstallation');
 
 async function getGenerationReadings(req, res, next) {
     try {
@@ -183,9 +184,131 @@ async function getLatestReadingByInstallation(req, res, next) {
     }
 }
 
+async function createGenerationReading(req, res, next) {
+    try {
+
+
+        if (
+            req.user.type !== 'device' ||
+            req.user.installationId !== req.params.installationId
+        ) {
+            return res.status(403).json({
+                code: 'INSTALLATION_ACCESS_DENIED',
+                message: 'Installation access denied',
+                detail: 'This device is not authorized to submit readings for this installation.'
+            });
+        }
+
+        const {
+            timestamp,
+            powerKw,
+            energyKwh,
+            voltage
+        } = req.body;
+
+        if (!timestamp || powerKw === undefined || energyKwh === undefined || voltage === undefined) {
+            return res.status(400).json({
+                code: 'INVALID_READING',
+                message: 'Invalid generation reading',
+                detail: 'timestamp, powerKw, energyKwh, and voltage are required.'
+            });
+        }
+
+
+        const readingDate = new Date(timestamp);
+
+        if (Number.isNaN(readingDate.getTime())) {
+            return res.status(400).json({
+                code: 'INVALID_TIMESTAMP',
+                message: 'Invalid timestamp',
+                detail: 'The timestamp must be a valid ISO 8601 date and time.'
+            });
+        }
+
+        if (typeof powerKw !== 'number' || powerKw < 0) {
+            return res.status(400).json({
+                code: 'INVALID_POWER',
+                message: 'Invalid power value',
+                detail: 'powerKw must be a number greater than or equal to 0.'
+            });
+        }
+
+        if (typeof energyKwh !== 'number' || energyKwh < 0) {
+            return res.status(400).json({
+                code: 'INVALID_ENERGY',
+                message: 'Invalid energy value',
+                detail: 'energyKwh must be a number greater than or equal to 0.'
+            });
+        }
+
+        if (typeof voltage !== 'number' || voltage < 0) {
+            return res.status(400).json({
+                code: 'INVALID_VOLTAGE',
+                message: 'Invalid voltage value',
+                detail: 'voltage must be a number greater than or equal to 0.'
+            });
+        }
+
+        const installation = await SolarInstallation.findById(
+            req.params.installationId
+        );
+
+        if (!installation) {
+            return res.status(404).json({
+                code: 'INSTALLATION_NOT_FOUND',
+                message: 'Solar installation not found',
+                detail: `No solar installation exists with id '${req.params.installationId}'.`
+            });
+        }
+
+        const existingReading = await GenerationReading.findById(
+            req.body._id
+        );
+
+        if (existingReading) {
+            const sameReading =
+                existingReading.installationId === req.params.installationId &&
+                existingReading.timestamp.getTime() === readingDate.getTime() &&
+                existingReading.powerKw === req.body.powerKw &&
+                existingReading.energyKwh === req.body.energyKwh &&
+                existingReading.voltage === req.body.voltage;
+
+            if (sameReading) {
+                return res.status(200).json(existingReading);
+            }
+
+            return res.status(409).json({
+                code: 'READING_ID_CONFLICT',
+                message: 'Generation reading ID already exists',
+                detail: `A different generation reading already exists with id '${req.body._id}'.`
+            });
+        }
+
+
+        const reading = new GenerationReading({
+            _id: req.body._id,
+            installationId: req.params.installationId,
+            timestamp: req.body.timestamp,
+            powerKw: req.body.powerKw,
+            energyKwh: req.body.energyKwh,
+            voltage: req.body.voltage
+        });
+
+        await reading.save();
+
+        res
+            .status(201)
+            .location(`/readings/${reading._id}`)
+            .json(reading);
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     getGenerationReadings,
     getGenerationReadingById,
     getReadingsByInstallation,
-    getLatestReadingByInstallation
+    getLatestReadingByInstallation,
+    createGenerationReading
 };

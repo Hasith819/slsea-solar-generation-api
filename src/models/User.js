@@ -26,6 +26,12 @@ const userSchema = new mongoose.Schema(
             enum: ['national', 'province', 'district']
         },
 
+        jurisdictionType: {
+            type: String,
+            enum: ['national', 'province', 'district'],
+            required: true
+        },
+
         jurisdictionId: {
             type: String,
             default: null

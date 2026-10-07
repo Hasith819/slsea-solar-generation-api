@@ -224,7 +224,7 @@ async function getGenerationReadingById(req, res, next) {
             });
         }
 
-      return res.setETag(reading);
+      return res.setConditionalGet(reading);
     } catch (error) {
         next(error);
     }

@@ -12,16 +12,26 @@ function generateETag(data) {
 }
 
 function conditionalGet(req, res, next) {
-    res.setETag = function (data) {
+    res.setConditionalGet = function (data) {
         const etag = generateETag(data);
 
         res.set('ETag', etag);
 
+        let lastModified = null;
+
+        if (data.updatedAt) {
+            lastModified = new Date(
+                Math.floor(new Date(data.updatedAt).getTime() / 1000) * 1000
+            );
+
+            res.set(
+                'Last-Modified',
+                lastModified.toUTCString()
+            );
+        }
+
         const ifNoneMatch = req.headers['if-none-match'];
 
-        if (ifNoneMatch === '*') {
-            return res.status(304).end();
-        }
 
         if (ifNoneMatch) {
             const clientETags = ifNoneMatch
@@ -33,8 +43,24 @@ function conditionalGet(req, res, next) {
             }
         }
 
+        const ifModifiedSince =
+            req.headers['if-modified-since'];
+
+        if (ifModifiedSince && lastModified) {
+            const clientDate = new Date(ifModifiedSince);
+
+            if (
+                !Number.isNaN(clientDate.getTime()) &&
+                lastModified <= clientDate
+            ) {
+                return res.status(304).end();
+            }
+        }
+
         return res.status(200).json(data);
     };
+
+    res.setETag = res.setConditionalGet;
 
     next();
 }

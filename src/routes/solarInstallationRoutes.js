@@ -7,7 +7,10 @@ const {
 const {
     getSolarInstallations,
     getSolarInstallationById,
-    getInstallationsBySubstation
+    getInstallationsBySubstation,
+    createSolarInstallation,
+    updateSolarInstallation,
+    deleteSolarInstallation
 } = require('../controllers/solarInstallationController');
 
 const {
@@ -21,7 +24,9 @@ const {
 } = require('../middleware/authMiddleware');
 
 const {
-    authorizeInstallation
+    authorizeInstallation,
+    authorizeInstallationCreate,
+    authorizeInstallationUpdate
 } = require('../middleware/jurisdictionMiddleware');
 
 const router = express.Router();
@@ -54,6 +59,25 @@ router.post(
     createGenerationReading
 );
 
+router.post(
+    '/',
+    authenticate,
+    authorizeInstallationCreate,
+    createSolarInstallation
+);
+router.put(
+    '/:installationId',
+    authenticate,
+    authorizeInstallation,
+    authorizeInstallationUpdate,
+    updateSolarInstallation
+);
+router.delete(
+    '/:installationId',
+    authenticate,
+    authorizeInstallation,
+    deleteSolarInstallation
+);
 router.get(
     '/:installationId',
     authenticate,

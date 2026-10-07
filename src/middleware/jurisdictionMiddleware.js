@@ -392,10 +392,148 @@ async function authorizeReading(req, res, next) {
     }
 }
 
+async function authorizeInstallationCreate(req, res, next) {
+    try {
+        const GridSubstation = require('../models/GridSubstation');
+        const District = require('../models/District');
+
+        const substation = await GridSubstation.findById(
+            req.body.substationId
+        );
+
+        if (!substation) {
+            return res.status(404).json({
+                code: 'SUBSTATION_NOT_FOUND',
+                message: 'Grid substation not found',
+                detail: `No grid substation exists with id '${req.body.substationId}'.`
+            });
+        }
+
+        // National users can create installations anywhere
+        if (req.user.jurisdictionType === 'national') {
+            return next();
+        }
+
+        // Province users can create only inside their province
+        if (req.user.jurisdictionType === 'province') {
+            const district = await District.findById(
+                substation.districtId
+            );
+
+            if (
+                !district ||
+                district.provinceId !== req.user.jurisdictionId
+            ) {
+                return res.status(403).json({
+                    code: 'ACCESS_DENIED',
+                    message: 'Access denied',
+                    detail: 'You cannot create an installation outside your province.'
+                });
+            }
+
+            return next();
+        }
+
+        // District users can create only inside their district
+        if (req.user.jurisdictionType === 'district') {
+            if (
+                substation.districtId !== req.user.jurisdictionId
+            ) {
+                return res.status(403).json({
+                    code: 'ACCESS_DENIED',
+                    message: 'Access denied',
+                    detail: 'You cannot create an installation outside your district.'
+                });
+            }
+
+            return next();
+        }
+
+        return res.status(403).json({
+            code: 'ACCESS_DENIED',
+            message: 'Access denied',
+            detail: 'You are not authorized to create solar installations.'
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+async function authorizeInstallationUpdate(req, res, next) {
+    try {
+        const GridSubstation = require('../models/GridSubstation');
+        const District = require('../models/District');
+
+        const substation = await GridSubstation.findById(
+            req.body.substationId
+        );
+
+        if (!substation) {
+            return res.status(404).json({
+                code: 'SUBSTATION_NOT_FOUND',
+                message: 'Grid substation not found',
+                detail: `No grid substation exists with id '${req.body.substationId}'.`
+            });
+        }
+
+        // National users can update to any substation
+        if (req.user.jurisdictionType === 'national') {
+            return next();
+        }
+
+        // Province users
+        if (req.user.jurisdictionType === 'province') {
+            const district = await District.findById(
+                substation.districtId
+            );
+
+            if (
+                !district ||
+                district.provinceId !== req.user.jurisdictionId
+            ) {
+                return res.status(403).json({
+                    code: 'ACCESS_DENIED',
+                    message: 'Access denied',
+                    detail: 'You cannot move an installation outside your province.'
+                });
+            }
+
+            return next();
+        }
+
+        // District users
+        if (req.user.jurisdictionType === 'district') {
+            if (
+                substation.districtId !== req.user.jurisdictionId
+            ) {
+                return res.status(403).json({
+                    code: 'ACCESS_DENIED',
+                    message: 'Access denied',
+                    detail: 'You cannot move an installation outside your district.'
+                });
+            }
+
+            return next();
+        }
+
+        return res.status(403).json({
+            code: 'ACCESS_DENIED',
+            message: 'Access denied',
+            detail: 'You are not authorized to update solar installations.'
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     authorizeProvince,
     authorizeDistrict,
     authorizeSubstation,
     authorizeInstallation,
-    authorizeReading
+    authorizeReading,
+    authorizeInstallationCreate,
+    authorizeInstallationUpdate
 };

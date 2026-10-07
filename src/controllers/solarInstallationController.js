@@ -108,8 +108,176 @@ async function getInstallationsBySubstation(req, res, next) {
     }
 }
 
+async function createSolarInstallation(req, res, next) {
+    try {
+        const {
+            _id,
+            substationId,
+            name,
+            meterId,
+            capacityKw,
+            latitude,
+            longitude
+        } = req.body;
+
+        if (
+            !_id ||
+            !substationId ||
+            !name ||
+            !meterId ||
+            capacityKw === undefined ||
+            latitude === undefined ||
+            longitude === undefined
+        ) {
+            return res.status(400).json({
+                code: 'VALIDATION_ERROR',
+                message: 'Missing required fields',
+                detail: '_id, substationId, name, meterId, capacityKw, latitude and longitude are required.'
+            });
+        }
+
+        const GridSubstation = require('../models/GridSubstation');
+
+        const substation = await GridSubstation.findById(substationId);
+
+        if (!substation) {
+            return res.status(404).json({
+                code: 'SUBSTATION_NOT_FOUND',
+                message: 'Grid substation not found',
+                detail: `No grid substation exists with id '${substationId}'.`
+            });
+        }
+
+        const installation = await SolarInstallation.create({
+            _id,
+            substationId,
+            name,
+            meterId,
+            capacityKw,
+            latitude,
+            longitude
+        });
+
+        return res
+            .status(201)
+            .location(`/installations/${installation._id}`)
+            .json(installation);
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+async function updateSolarInstallation(req, res, next) {
+    try {
+        const {
+            substationId,
+            name,
+            meterId,
+            capacityKw,
+            latitude,
+            longitude
+        } = req.body;
+
+        if (
+            !substationId ||
+            !name ||
+            !meterId ||
+            capacityKw === undefined ||
+            latitude === undefined ||
+            longitude === undefined
+        ) {
+            return res.status(400).json({
+                code: 'VALIDATION_ERROR',
+                message: 'Missing required fields',
+                detail: 'substationId, name, meterId, capacityKw, latitude and longitude are required.'
+            });
+        }
+
+        const installation = await SolarInstallation.findById(
+            req.params.installationId
+        );
+
+        if (!installation) {
+            return res.status(404).json({
+                code: 'INSTALLATION_NOT_FOUND',
+                message: 'Solar installation not found',
+                detail: `No solar installation exists with id '${req.params.installationId}'.`
+            });
+        }
+
+        const GridSubstation = require('../models/GridSubstation');
+
+        const substation = await GridSubstation.findById(substationId);
+
+        if (!substation) {
+            return res.status(404).json({
+                code: 'SUBSTATION_NOT_FOUND',
+                message: 'Grid substation not found',
+                detail: `No grid substation exists with id '${substationId}'.`
+            });
+        }
+
+        installation.substationId = substationId;
+        installation.name = name;
+        installation.meterId = meterId;
+        installation.capacityKw = capacityKw;
+        installation.latitude = latitude;
+        installation.longitude = longitude;
+
+        await installation.save();
+
+        return res.status(200).json(installation);
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+async function deleteSolarInstallation(req, res, next) {
+    try {
+        const installation = await SolarInstallation.findById(
+            req.params.installationId
+        );
+
+        if (!installation) {
+            return res.status(404).json({
+                code: 'INSTALLATION_NOT_FOUND',
+                message: 'Solar installation not found',
+                detail: `No solar installation exists with id '${req.params.installationId}'.`
+            });
+        }
+
+        const GenerationReading = require('../models/GenerationReading');
+
+        const readingCount = await GenerationReading.countDocuments({
+            installationId: req.params.installationId
+        });
+
+        if (readingCount > 0) {
+            return res.status(409).json({
+                code: 'RESOURCE_HAS_DEPENDENCIES',
+                message: 'Solar installation cannot be deleted',
+                detail: `The installation has ${readingCount} generation reading(s). Delete is not allowed because generation readings are historical records.`
+            });
+        }
+
+        await SolarInstallation.deleteOne({
+            _id: req.params.installationId
+        });
+
+        return res.status(204).end();
+
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     getSolarInstallations,
     getSolarInstallationById,
-    getInstallationsBySubstation
+    getInstallationsBySubstation,
+    createSolarInstallation,
+    updateSolarInstallation,
+    deleteSolarInstallation
 };

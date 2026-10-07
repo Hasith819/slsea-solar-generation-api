@@ -1,4 +1,6 @@
 const express = require('express');
+const helmet = require('helmet');
+const cors = require('cors');
 
 const provinceRoutes = require('./routes/provinceRoutes');
 const districtRoutes = require('./routes/districtRoutes');
@@ -11,6 +13,8 @@ const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
+app.use(helmet());
+app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {

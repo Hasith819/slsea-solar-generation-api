@@ -1,6 +1,10 @@
 const express = require('express');
 
 const {
+    conditionalGet
+} = require('../middleware/conditionalGet');
+
+const {
     getSolarInstallations,
     getSolarInstallationById,
     getInstallationsBySubstation
@@ -25,6 +29,7 @@ const router = express.Router();
 router.get(
     '/',
     authenticate,
+    conditionalGet,
     getSolarInstallations
 );
 
@@ -32,6 +37,7 @@ router.get(
     '/:installationId/readings/latest',
     authenticate,
     authorizeInstallation,
+    conditionalGet,
     getLatestReadingByInstallation
 );
 
@@ -52,6 +58,7 @@ router.get(
     '/:installationId',
     authenticate,
     authorizeInstallation,
+    conditionalGet,
     getSolarInstallationById
 );
 

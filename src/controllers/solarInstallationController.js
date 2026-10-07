@@ -66,7 +66,7 @@ async function getSolarInstallations(req, res, next) {
             .find(filter)
             .sort({ name: 1 });
 
-        res.status(200).json(installations);
+        return res.setETag(installations);
 
     } catch (error) {
         next(error);
@@ -87,7 +87,8 @@ async function getSolarInstallationById(req, res, next) {
             });
         }
 
-        res.status(200).json(installation);
+       return res.setETag(installation);
+
     } catch (error) {
         next(error);
     }
@@ -101,7 +102,7 @@ async function getInstallationsBySubstation(req, res, next) {
             })
             .sort({ name: 1 });
 
-        res.status(200).json(installations);
+        return res.setETag(installations);
     } catch (error) {
         next(error);
     }

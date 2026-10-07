@@ -1,5 +1,7 @@
 const express = require('express');
 
+
+
 const {
     getProvinces,
     getProvinceById
@@ -12,18 +14,30 @@ const {
 const { authenticate } = require('../middleware/authMiddleware');
 const { authorizeProvince } = require('../middleware/jurisdictionMiddleware');
 
+const {
+    conditionalGet
+} = require('../middleware/conditionalGet');
+
 const router = express.Router();
 
 router.get(
     '/',
     authenticate,
+    conditionalGet,
     getProvinces
 );
-router.get('/:provinceId/districts', getDistrictsByProvince);
+router.get(
+    '/:provinceId/districts',
+    authenticate,
+    authorizeProvince,
+    conditionalGet,
+    getDistrictsByProvince
+);
 router.get(
     '/:provinceId',
     authenticate,
     authorizeProvince,
+    conditionalGet,
     getProvinceById
 );
 

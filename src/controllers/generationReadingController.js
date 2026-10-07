@@ -200,7 +200,7 @@ async function getGenerationReadings(req, res, next) {
                 `${baseUrl}?page=${page + 1}&limit=${limit}`;
         }
 
-        res.status(200).json({
+        return res.setETag({
             data: readings,
             pagination
         });
@@ -224,7 +224,7 @@ async function getGenerationReadingById(req, res, next) {
             });
         }
 
-        res.status(200).json(reading);
+      return res.setETag(reading);
     } catch (error) {
         next(error);
     }
@@ -375,7 +375,7 @@ async function getLatestReadingByInstallation(req, res, next) {
             });
         }
 
-        res.status(200).json(reading);
+        return res.setETag(reading);
     } catch (error) {
         next(error);
     }

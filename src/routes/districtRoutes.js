@@ -14,11 +14,16 @@ const {
     authorizeDistrict
 } = require('../middleware/jurisdictionMiddleware');
 
+const {
+    conditionalGet
+} = require('../middleware/conditionalGet');
+
 const router = express.Router();
 
 router.get(
     '/',
     authenticate,
+    conditionalGet,
     getDistricts
 );
 
@@ -26,11 +31,15 @@ router.get(
     '/:districtId',
     authenticate,
     authorizeDistrict,
+    conditionalGet,
     getDistrictById
 );
 
 router.get(
     '/:districtId/grid-substations',
+    authenticate,
+    authorizeDistrict,
+    conditionalGet,
     getGridSubstationsByDistrict
 );
 

@@ -17,18 +17,30 @@ const {
     authorizeSubstation
 } = require('../middleware/jurisdictionMiddleware');
 
+const {
+    conditionalGet
+} = require('../middleware/conditionalGet');
+
 const router = express.Router();
 
 router.get(
     '/',
     authenticate,
+    conditionalGet,
     getGridSubstations
 );
-router.get('/:substationId/installations', getInstallationsBySubstation);
+router.get(
+    '/:substationId/installations',
+    authenticate,
+    authorizeSubstation,
+    conditionalGet,
+    getInstallationsBySubstation
+);
 router.get(
     '/:substationId',
     authenticate,
     authorizeSubstation,
+    conditionalGet,
     getGridSubstationById
 );
 

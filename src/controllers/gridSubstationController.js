@@ -46,7 +46,7 @@ async function getGridSubstations(req, res, next) {
             .find(filter)
             .sort({ name: 1 });
 
-        res.status(200).json(substations);
+        return res.setETag(substations);
 
     } catch (error) {
         next(error);
@@ -67,7 +67,7 @@ async function getGridSubstationById(req, res, next) {
             });
         }
 
-        res.status(200).json(substation);
+        return res.setETag(substation);
     } catch (error) {
         next(error);
     }

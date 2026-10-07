@@ -36,7 +36,7 @@ async function getDistricts(req, res, next) {
             .find(filter)
             .sort({ name: 1 });
 
-        res.status(200).json(districts);
+        return res.setETag(districts);
 
     } catch (error) {
         next(error);
@@ -55,7 +55,7 @@ async function getDistrictById(req, res, next) {
             });
         }
 
-        res.status(200).json(district);
+        return res.setETag(district);
     } catch (error) {
         next(error);
     }
@@ -67,7 +67,7 @@ async function getDistrictsByProvince(req, res, next) {
             provinceId: req.params.provinceId
         }).sort({ name: 1 });
 
-        res.status(200).json(districts);
+        return res.setETag(districts);
     } catch (error) {
         next(error);
     }
@@ -80,7 +80,7 @@ async function getGridSubstationsByDistrict(req, res, next) {
             districtId: req.params.districtId
         }).sort({ name: 1 });
 
-        res.status(200).json(substations);
+        return res.setETag(substations);
     } catch (error) {
         next(error);
     }

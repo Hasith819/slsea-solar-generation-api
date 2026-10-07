@@ -49,7 +49,7 @@ async function getProvinces(req, res, next) {
             .find(filter)
             .sort({ name: 1 });
 
-        res.status(200).json(provinces);
+        return res.setETag(provinces);
 
     } catch (error) {
         next(error);
@@ -68,7 +68,7 @@ async function getProvinceById(req, res, next) {
             });
         }
 
-        res.status(200).json(province);
+       return res.setETag(province);
     } catch (error) {
         next(error);
     }

@@ -13,11 +13,16 @@ const {
     authorizeReading
 } = require('../middleware/jurisdictionMiddleware');
 
+const {
+    conditionalGet
+} = require('../middleware/conditionalGet');
+
 const router = express.Router();
 
 router.get(
     '/',
     authenticate,
+    conditionalGet,
     getGenerationReadings
 );
 
@@ -25,6 +30,7 @@ router.get(
     '/:readingId',
     authenticate,
     authorizeReading,
+    conditionalGet,
     getGenerationReadingById
 );
 

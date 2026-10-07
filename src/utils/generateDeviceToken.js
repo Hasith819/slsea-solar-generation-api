@@ -1,7 +1,7 @@
 const { createToken } = require('./auth');
 
 const token = createToken({
-    installationId: 'd4e5f601234567890123225',
+    installationId: 'dd4e5f601234567890123225',
     type: 'device'
 });
 

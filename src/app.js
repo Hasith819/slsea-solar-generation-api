@@ -2,6 +2,9 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 
+const swaggerUi = require('swagger-ui-express');
+const openapiSpec = require('../openapi');
+
 const provinceRoutes = require('./routes/provinceRoutes');
 const districtRoutes = require('./routes/districtRoutes');
 const gridSubstationRoutes = require('./routes/gridSubstationRoutes');
@@ -22,6 +25,12 @@ app.get('/', (req, res) => {
         message: 'SLSEA Solar Generation Data API'
     });
 });
+
+app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(openapiSpec)
+);
 
 app.use('/auth', authRoutes);
 

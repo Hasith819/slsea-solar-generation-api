@@ -14,7 +14,11 @@ const { authorizeProvince } = require('../middleware/jurisdictionMiddleware');
 
 const router = express.Router();
 
-router.get('/', getProvinces);
+router.get(
+    '/',
+    authenticate,
+    getProvinces
+);
 router.get('/:provinceId/districts', getDistrictsByProvince);
 router.get(
     '/:provinceId',

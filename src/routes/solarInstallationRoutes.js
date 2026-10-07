@@ -22,7 +22,11 @@ const {
 
 const router = express.Router();
 
-router.get('/', getSolarInstallations);
+router.get(
+    '/',
+    authenticate,
+    getSolarInstallations
+);
 
 router.get(
     '/:installationId/readings/latest',

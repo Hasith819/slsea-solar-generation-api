@@ -19,7 +19,11 @@ const {
 
 const router = express.Router();
 
-router.get('/', getGridSubstations);
+router.get(
+    '/',
+    authenticate,
+    getGridSubstations
+);
 router.get('/:substationId/installations', getInstallationsBySubstation);
 router.get(
     '/:substationId',

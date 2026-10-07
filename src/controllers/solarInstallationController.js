@@ -2,11 +2,72 @@ const SolarInstallation = require('../models/SolarInstallation');
 
 async function getSolarInstallations(req, res, next) {
     try {
+        let filter = {};
+
+        // National users can see all installations
+        if (req.user.jurisdictionType === 'national') {
+            filter = {};
+        }
+
+        // Province users can see installations
+        // belonging to substations in their province
+        else if (req.user.jurisdictionType === 'province') {
+            const District = require('../models/District');
+            const GridSubstation = require('../models/GridSubstation');
+
+            const districts = await District.find({
+                provinceId: req.user.jurisdictionId
+            }).select('_id');
+
+            const districtIds = districts.map(
+                district => district._id
+            );
+
+            const substations = await GridSubstation.find({
+                districtId: { $in: districtIds }
+            }).select('_id');
+
+            const substationIds = substations.map(
+                substation => substation._id
+            );
+
+            filter = {
+                substationId: { $in: substationIds }
+            };
+        }
+
+        // District users can see installations
+        // belonging to substations in their district
+        else if (req.user.jurisdictionType === 'district') {
+            const GridSubstation = require('../models/GridSubstation');
+
+            const substations = await GridSubstation.find({
+                districtId: req.user.jurisdictionId
+            }).select('_id');
+
+            const substationIds = substations.map(
+                substation => substation._id
+            );
+
+            filter = {
+                substationId: { $in: substationIds }
+            };
+        }
+
+        else {
+            return res.status(403).json({
+                code: 'ACCESS_DENIED',
+                message: 'Access denied',
+                detail: 'You are not authorized to access solar installations.'
+            });
+        }
+
         const installations = await SolarInstallation
-            .find()
+            .find(filter)
             .sort({ name: 1 });
 
         res.status(200).json(installations);
+
     } catch (error) {
         next(error);
     }

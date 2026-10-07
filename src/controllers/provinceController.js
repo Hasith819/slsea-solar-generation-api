@@ -2,9 +2,55 @@ const Province = require('../models/Province');
 
 async function getProvinces(req, res, next) {
     try {
-        const provinces = await Province.find().sort({ name: 1 });
+        let filter = {};
+
+        // National users can see all provinces
+        if (req.user.jurisdictionType === 'national') {
+            filter = {};
+        }
+
+        // Province users can see only their province
+        else if (req.user.jurisdictionType === 'province') {
+            filter = {
+                _id: req.user.jurisdictionId
+            };
+        }
+
+        // District users can see their parent province
+        else if (req.user.jurisdictionType === 'district') {
+            const District = require('../models/District');
+
+            const district = await District.findById(
+                req.user.jurisdictionId
+            );
+
+            if (!district) {
+                return res.status(403).json({
+                    code: 'INVALID_JURISDICTION',
+                    message: 'Invalid jurisdiction',
+                    detail: 'The user jurisdiction could not be found.'
+                });
+            }
+
+            filter = {
+                _id: district.provinceId
+            };
+        }
+
+        else {
+            return res.status(403).json({
+                code: 'ACCESS_DENIED',
+                message: 'Access denied',
+                detail: 'You are not authorized to access provinces.'
+            });
+        }
+
+        const provinces = await Province
+            .find(filter)
+            .sort({ name: 1 });
 
         res.status(200).json(provinces);
+
     } catch (error) {
         next(error);
     }

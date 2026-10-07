@@ -3,9 +3,41 @@ const GridSubstation = require('../models/GridSubstation');
 
 async function getDistricts(req, res, next) {
     try {
-        const districts = await District.find().sort({ name: 1 });
+        let filter = {};
+
+        // National users can see all districts
+        if (req.user.jurisdictionType === 'national') {
+            filter = {};
+        }
+
+        // Province users can see districts in their province
+        else if (req.user.jurisdictionType === 'province') {
+            filter = {
+                provinceId: req.user.jurisdictionId
+            };
+        }
+
+        // District users can see only their district
+        else if (req.user.jurisdictionType === 'district') {
+            filter = {
+                _id: req.user.jurisdictionId
+            };
+        }
+
+        else {
+            return res.status(403).json({
+                code: 'ACCESS_DENIED',
+                message: 'Access denied',
+                detail: 'You are not authorized to access districts.'
+            });
+        }
+
+        const districts = await District
+            .find(filter)
+            .sort({ name: 1 });
 
         res.status(200).json(districts);
+
     } catch (error) {
         next(error);
     }

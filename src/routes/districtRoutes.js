@@ -16,7 +16,11 @@ const {
 
 const router = express.Router();
 
-router.get('/', getDistricts);
+router.get(
+    '/',
+    authenticate,
+    getDistricts
+);
 
 router.get(
     '/:districtId',

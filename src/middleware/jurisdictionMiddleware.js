@@ -1,6 +1,7 @@
 const GridSubstation = require('../models/GridSubstation');
 const District = require('../models/District');
 const SolarInstallation = require('../models/SolarInstallation');
+const GenerationReading = require('../models/GenerationReading');
 
 async function authorizeProvince(req, res, next) {
     try {
@@ -291,10 +292,110 @@ async function authorizeInstallation(req, res, next) {
     }
 }
 
+async function authorizeReading(req, res, next) {
+    try {
+        if (!req.user) {
+            return res.status(401).json({
+                code: 'AUTHENTICATION_REQUIRED',
+                message: 'Authentication required',
+                detail: 'A valid authenticated user is required.'
+            });
+        }
+
+        const reading = await GenerationReading.findById(
+            req.params.readingId
+        );
+
+        if (!reading) {
+            return res.status(404).json({
+                code: 'READING_NOT_FOUND',
+                message: 'Generation reading not found',
+                detail: `No generation reading exists with id '${req.params.readingId}'.`
+            });
+        }
+
+        // National users can access any reading
+        if (req.user.jurisdictionType === 'national') {
+            return next();
+        }
+
+        const installation = await SolarInstallation.findById(
+            reading.installationId
+        );
+
+        if (!installation) {
+            return res.status(403).json({
+                code: 'INVALID_JURISDICTION',
+                message: 'Invalid jurisdiction',
+                detail: 'The reading installation could not be found.'
+            });
+        }
+
+        const substation = await GridSubstation.findById(
+            installation.substationId
+        );
+
+        if (!substation) {
+            return res.status(403).json({
+                code: 'INVALID_JURISDICTION',
+                message: 'Invalid jurisdiction',
+                detail: 'The installation substation could not be found.'
+            });
+        }
+
+        // District users can access readings from their district
+        if (req.user.jurisdictionType === 'district') {
+            if (substation.districtId !== req.user.jurisdictionId) {
+                return res.status(403).json({
+                    code: 'JURISDICTION_ACCESS_DENIED',
+                    message: 'Jurisdiction access denied',
+                    detail: 'You are not authorized to access this generation reading.'
+                });
+            }
+
+            return next();
+        }
+
+        // Province users can access readings from their province
+        if (req.user.jurisdictionType === 'province') {
+            const district = await District.findById(
+                substation.districtId
+            );
+
+            if (!district) {
+                return res.status(403).json({
+                    code: 'INVALID_JURISDICTION',
+                    message: 'Invalid jurisdiction',
+                    detail: 'The reading district could not be found.'
+                });
+            }
+
+            if (district.provinceId !== req.user.jurisdictionId) {
+                return res.status(403).json({
+                    code: 'JURISDICTION_ACCESS_DENIED',
+                    message: 'Jurisdiction access denied',
+                    detail: 'You are not authorized to access this generation reading.'
+                });
+            }
+
+            return next();
+        }
+
+        return res.status(403).json({
+            code: 'ACCESS_DENIED',
+            message: 'Access denied',
+            detail: 'You are not authorized to access this generation reading.'
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
 
 module.exports = {
     authorizeProvince,
     authorizeDistrict,
     authorizeSubstation,
-    authorizeInstallation
+    authorizeInstallation,
+    authorizeReading
 };

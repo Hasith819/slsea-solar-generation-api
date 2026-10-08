@@ -1,8 +1,8 @@
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
-
 const swaggerUi = require('swagger-ui-express');
+
 const openapiSpec = require('../openapi');
 
 const provinceRoutes = require('./routes/provinceRoutes');
@@ -26,8 +26,25 @@ app.get('/', (req, res) => {
     });
 });
 
+app.get('/openapi.json', (req, res) => {
+    res.json(openapiSpec);
+});
+
 app.use(
     '/api-docs',
+    helmet({
+        contentSecurityPolicy: {
+            useDefaults: true,
+            directives: {
+                defaultSrc: ["'self'"],
+                scriptSrc: ["'self'", "'unsafe-inline'"],
+                styleSrc: ["'self'", "'unsafe-inline'"],
+                imgSrc: ["'self'", 'data:'],
+                connectSrc: ["'self'"],
+                fontSrc: ["'self'", 'data:']
+            }
+        }
+    }),
     swaggerUi.serve,
     swaggerUi.setup(openapiSpec)
 );

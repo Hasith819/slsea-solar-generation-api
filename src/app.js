@@ -1,7 +1,6 @@
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
-const swaggerUi = require('swagger-ui-express');
 
 const openapiSpec = require('../openapi');
 
@@ -16,7 +15,21 @@ const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
-app.use(helmet());
+app.use(
+    helmet({
+        contentSecurityPolicy: {
+            useDefaults: true,
+            directives: {
+                defaultSrc: ["'self'"],
+                scriptSrc: ["'self'", 'https://unpkg.com', "'unsafe-inline'"],
+                styleSrc: ["'self'", 'https://unpkg.com', "'unsafe-inline'"],
+                imgSrc: ["'self'", 'data:'],
+                connectSrc: ["'self'", 'https://unpkg.com'],
+                fontSrc: ["'self'", 'data:']
+            }
+        }
+    })
+);
 app.use(cors());
 app.use(express.json());
 
@@ -30,24 +43,41 @@ app.get('/openapi.json', (req, res) => {
     res.json(openapiSpec);
 });
 
-app.use(
-    '/api-docs',
-    helmet({
-        contentSecurityPolicy: {
-            useDefaults: true,
-            directives: {
-                defaultSrc: ["'self'"],
-                scriptSrc: ["'self'", "'unsafe-inline'"],
-                styleSrc: ["'self'", "'unsafe-inline'"],
-                imgSrc: ["'self'", 'data:'],
-                connectSrc: ["'self'"],
-                fontSrc: ["'self'", 'data:']
-            }
-        }
-    }),
-    swaggerUi.serve,
-    swaggerUi.setup(openapiSpec)
-);
+app.get('/api-docs', (req, res) => {
+    res.type('html').send(`<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SLSEA Solar Generation Data API Docs</title>
+    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
+    <style>
+        html { box-sizing: border-box; overflow-y: scroll; }
+        *, *:before, *:after { box-sizing: inherit; }
+        body { margin: 0; background: #fafafa; }
+    </style>
+</head>
+<body>
+    <div id="swagger-ui"></div>
+    <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+    <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-standalone-preset.js"></script>
+    <script>
+        window.onload = function() {
+            window.ui = SwaggerUIBundle({
+                url: '/openapi.json',
+                dom_id: '#swagger-ui',
+                deepLinking: false,
+                presets: [
+                    SwaggerUIBundle.presets.apis,
+                    SwaggerUIStandalonePreset
+                ],
+                layout: 'BaseLayout'
+            });
+        };
+    </script>
+</body>
+</html>`);
+});
 
 app.use('/auth', authRoutes);
 
